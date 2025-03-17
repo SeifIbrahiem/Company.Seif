@@ -1,3 +1,8 @@
+using Company.Seif.BLL.Interfaces;
+using Company.Seif.BLL.Repositories;
+using Company.Seif.DAL.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
+
 namespace Company.Seif.PL
 {
     public class Program
@@ -8,7 +13,13 @@ namespace Company.Seif.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews(); //Register Built_in MVC Services
-
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); //Allow DI of departmentRepository
+            builder.Services.AddDbContext<CompanyDbContext>(
+                options =>
+                {
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                }
+                );  //Allow DI of CompanyDbContext
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
