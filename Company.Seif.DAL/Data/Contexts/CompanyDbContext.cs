@@ -27,6 +27,8 @@ namespace Company.Seif.DAL.Data.Contexts
         //    optionsBuilder.UseSqlServer("Server = . ; Database = CompanyGO2; Trusted_Connection = True ; TrustedServerCertificate = True ");
         //}
         public DbSet<Department> Departments { get; set; }
+
+        public DbSet<Employee> Employees { get; set; }
         public object Assemply { get; private set; }
     }
 }
