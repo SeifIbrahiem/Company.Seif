@@ -14,6 +14,7 @@ namespace Company.Seif.PL
             // Add services to the container.
             builder.Services.AddControllersWithViews(); //Register Built_in MVC Services
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); //Allow DI of departmentRepository
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddDbContext<CompanyDbContext>(
                 options =>
                 {

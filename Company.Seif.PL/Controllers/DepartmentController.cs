@@ -117,20 +117,5 @@ namespace Company.Seif.PL.Controllers
 
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
