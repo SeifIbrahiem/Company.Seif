@@ -29,7 +29,7 @@ namespace Company.Seif.DAL.Data.Contexts
         public DbSet<Department> Departments { get; set; }
 
         public DbSet<Employee> Employees { get; set; }
-        public object Assemply { get; private set; }
+        
     }
 }
 
