@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace Company.Seif.BLL.Interfaces
 {
-    public interface IEmployeeRepository
+    public interface IEmployeeRepository: IGenericRepository<Employee>
     {
-        IEnumerable<Employee> GetAll();
+        //IEnumerable<Employee> GetAll();
 
-        Employee? Get(int id);
+        //Employee? Get(int id);
 
-        int Add(Employee model);
+        //int Add(Employee model);
 
-        int Update(Employee model);
+        //int Update(Employee model);
 
-        int Delete(Employee model);
+        //int Delete(Employee model);
     }
 }
