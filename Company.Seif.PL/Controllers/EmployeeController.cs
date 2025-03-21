@@ -64,15 +64,45 @@ namespace Company.Seif.PL.Controllers
 
         public IActionResult Edit(int? id)
         {
-            return Detailes(id, "Edit");
+            if (id is null) return BadRequest( "Invalid Id");
+            var employee = _employeeRepository.Get(id.Value);
+            if (employee is null) return NotFound(new { statueCode = 404, Message = $"Employee With Id : {id} is not found" });
+            var employeeDto = new CreateEmployeeDto()
+            {
+                Name = employee.Name,
+                Adress = employee.Adress,
+                Age = employee.Age,
+                CreateAt = employee.CreateAt,
+                HiringDate = employee.HiringDate,
+                Email = employee.Email,
+                IsActive = employee.IsActive,
+                IsDeleted = employee.IsDeleted,
+                Phone = employee.Phone,
+                Salary = employee.Salary,
+            };
+            return View(employeeDto);
         }
         [HttpPost]
-        public IActionResult Edit([FromRoute] int id, Employee model)
+        public IActionResult Edit([FromRoute] int id, CreateEmployeeDto model)
         {
             if (ModelState.IsValid)
             {
-                if (id != model.Id) return BadRequest(); //400
-                var count = _employeeRepository.Update(model);
+                //if (id != model.Id) return BadRequest(); //400
+                var employee = new Employee()
+                {
+                    Id = id,
+                    Name = model.Name,
+                    Adress = model.Adress,
+                    Age = model.Age,
+                    CreateAt = model.CreateAt,
+                    HiringDate = model.HiringDate,
+                    Email = model.Email,
+                    IsActive = model.IsActive,
+                    IsDeleted = model.IsDeleted,
+                    Phone = model.Phone,
+                    Salary = model.Salary,
+                };
+                var count = _employeeRepository.Update(employee);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
