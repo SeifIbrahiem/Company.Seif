@@ -3,12 +3,13 @@ using Company.Seif.BLL.Repositories;
 using Company.Seif.DAL.Models;
 using Company.Seif.PL.DTOS;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace Company.Seif.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly  IEmployeeRepository _employeeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
         public EmployeeController(IEmployeeRepository employeeRepository)
         {
             _employeeRepository = employeeRepository;
@@ -17,6 +18,7 @@ namespace Company.Seif.PL.Controllers
         public IActionResult Index()
         {
             var employees = _employeeRepository.GetAll();
+            ViewData["Message"] = "Hello From ViewData";
             return View(employees);
         }
         [HttpGet]
@@ -31,20 +33,21 @@ namespace Company.Seif.PL.Controllers
             {
                 var employee = new Employee()
                 {
-                   Name = model.Name,
-                   Adress = model.Adress,
-                   Age = model.Age,
-                   CreateAt=model.CreateAt,
-                   HiringDate = model.HiringDate,
-                   Email = model.Email,
-                   IsActive = model.IsActive,
-                   IsDeleted = model.IsDeleted,
-                   Phone = model.Phone,
-                   Salary = model.Salary,
+                    Name = model.Name,
+                    Adress = model.Adress,
+                    Age = model.Age,
+                    CreateAt = model.CreateAt,
+                    HiringDate = model.HiringDate,
+                    Email = model.Email,
+                    IsActive = model.IsActive,
+                    IsDeleted = model.IsDeleted,
+                    Phone = model.Phone,
+                    Salary = model.Salary,
                 };
                 var count = _employeeRepository.Add(employee);
                 if (count > 0)
                 {
+                    TempData["Message"] = "Employee is created !!";
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -64,7 +67,7 @@ namespace Company.Seif.PL.Controllers
 
         public IActionResult Edit(int? id)
         {
-            if (id is null) return BadRequest( "Invalid Id");
+            if (id is null) return BadRequest("Invalid Id");
             var employee = _employeeRepository.Get(id.Value);
             if (employee is null) return NotFound(new { statueCode = 404, Message = $"Employee With Id : {id} is not found" });
             var employeeDto = new CreateEmployeeDto()
@@ -134,7 +137,7 @@ namespace Company.Seif.PL.Controllers
         }
 
     }
-}
+}  
 
 
 

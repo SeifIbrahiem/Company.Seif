@@ -1,6 +1,7 @@
 ﻿using Company.Seif.BLL.Interfaces;
 using Company.Seif.DAL.Data.Contexts;
 using Company.Seif.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Company.Seif.BLL.Repositories
     {
         private readonly CompanyDbContext _context;
 
-        public GenericRepository(CompanyDbContext context) 
+        public GenericRepository(CompanyDbContext context)
         {
             this._context = context;
         }
@@ -28,7 +29,7 @@ namespace Company.Seif.BLL.Repositories
         public int Add(T model)
         {
             _context.Set<T>().Add(model);
-               return _context.SaveChanges();
+            return _context.SaveChanges();
         }
 
         public int Delete(T model)
