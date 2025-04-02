@@ -21,6 +21,18 @@
         <p>@TempData["Message"]</p>
     </div>
 }
+<form>
+    <div class="container  m-4 ">
+        <div class="row">
+            <div class="col-6">
+                <input id="SearchInput" placeholder="Search By Name" name="SearchInput" class="form-control" />
+            </div>
+            <div class="col-6">
+        <input type="submit" class="btn btn-success" value="Search"/>
+            </div>
+        </div>
+    </div>
+</form>
 
 <a asp-action="create" asp-controller="Employee" class="btn btn-primary">Create Employee</a>
 
@@ -42,6 +54,7 @@
                 <th>IsDeleted</th>
                 <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
                 <th>@Html.DisplayNameFor(E => E.CreateAt)</th>
+                <th>Department</th>
                 <th>Detailes</th>
                 <th>Update</th>
                 <th>Delete</th>
@@ -61,6 +74,13 @@
                 <td>@item.IsDeleted</td>
                 <td>@item.HiringDate</td>
                 <td>@item.CreateAt</td>
+                @if(item.Department is null)
+                {
+                    <td>No Department</td>
+                }else
+                {
+                    <td>@item.Department.Name</td>
+                }
                 <partial name="_ButtonPartialView" model="@item.Id" />
             </tr>
 

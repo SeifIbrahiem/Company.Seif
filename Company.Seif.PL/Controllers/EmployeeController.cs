@@ -10,20 +10,33 @@ namespace Company.Seif.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        private readonly IDepartmentRepository _departmentRepository;
+
+        public EmployeeController(IEmployeeRepository employeeRepository , IDepartmentRepository departmentRepository)
         {
             _employeeRepository = employeeRepository;
+            _departmentRepository = departmentRepository;
         }
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string?SearchInput)
         {
-            var employees = _employeeRepository.GetAll();
-            ViewData["Message"] = "Hello From ViewData";
+            IEnumerable<Employee> employees;
+            if (string.IsNullOrEmpty(SearchInput))
+            { 
+             employees = _employeeRepository.GetAll();
+            }
+            else
+            {
+             employees= _employeeRepository.GetByName(SearchInput);
+            }
+            // ViewData["Message"] = "Hello From ViewData";
             return View(employees);
         }
         [HttpGet]
         public IActionResult Create()
         {
+            var departments =   _departmentRepository.GetAll();
+           ViewData["departments"] = departments;
             return View();
         }
         [HttpPost]
@@ -43,6 +56,7 @@ namespace Company.Seif.PL.Controllers
                     IsDeleted = model.IsDeleted,
                     Phone = model.Phone,
                     Salary = model.Salary,
+                    DepartmentId = model.DepartmentId,
                 };
                 var count = _employeeRepository.Add(employee);
                 if (count > 0)
@@ -64,48 +78,37 @@ namespace Company.Seif.PL.Controllers
             return View(viewName, employee);
         }
         [HttpGet]
-
         public IActionResult Edit(int? id)
         {
+            var departments = _departmentRepository.GetAll();
+            ViewData["departments"] = departments;
             if (id is null) return BadRequest("Invalid Id");
             var employee = _employeeRepository.Get(id.Value);
             if (employee is null) return NotFound(new { statueCode = 404, Message = $"Employee With Id : {id} is not found" });
-            var employeeDto = new CreateEmployeeDto()
-            {
-                Name = employee.Name,
-                Adress = employee.Adress,
-                Age = employee.Age,
-                CreateAt = employee.CreateAt,
-                HiringDate = employee.HiringDate,
-                Email = employee.Email,
-                IsActive = employee.IsActive,
-                IsDeleted = employee.IsDeleted,
-                Phone = employee.Phone,
-                Salary = employee.Salary,
-            };
-            return View(employeeDto);
+            return View(employee);
         }
         [HttpPost]
-        public IActionResult Edit([FromRoute] int id, CreateEmployeeDto model)
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit([FromRoute] int id,Employee model)
         {
             if (ModelState.IsValid)
             {
-                //if (id != model.Id) return BadRequest(); //400
-                var employee = new Employee()
-                {
-                    Id = id,
-                    Name = model.Name,
-                    Adress = model.Adress,
-                    Age = model.Age,
-                    CreateAt = model.CreateAt,
-                    HiringDate = model.HiringDate,
-                    Email = model.Email,
-                    IsActive = model.IsActive,
-                    IsDeleted = model.IsDeleted,
-                    Phone = model.Phone,
-                    Salary = model.Salary,
-                };
-                var count = _employeeRepository.Update(employee);
+                if (id != model.Id) return BadRequest(); //400
+                //var employee = new Employee()
+                //{
+                //    Id = id,
+                //    Name = model.Name,
+                //    Adress = model.Adress,
+                //    Age = model.Age,
+                //    CreateAt = model.CreateAt,
+                //    HiringDate = model.HiringDate,
+                //    Email = model.Email,
+                //    IsActive = model.IsActive,
+                //    IsDeleted = model.IsDeleted,
+                //    Phone = model.Phone,
+                //    Salary = model.Salary,
+                //};
+                var count = _employeeRepository.Update(model);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));

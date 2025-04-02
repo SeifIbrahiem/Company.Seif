@@ -15,6 +15,10 @@ namespace Company.Seif.DAL.Data.Configurations
         {
             builder.Property(E => E.Salary).HasColumnType("decimal(18,2)");
           
+            builder.HasOne(E => E.Department)
+                   .WithMany(D => D.Employees)
+                   .HasForeignKey(E => E.DepartmentId)
+                   .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
