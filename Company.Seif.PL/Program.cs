@@ -1,6 +1,7 @@
 using Company.Seif.BLL.Interfaces;
 using Company.Seif.BLL.Repositories;
 using Company.Seif.DAL.Data.Contexts;
+using Company.Seif.PL.Mapping;
 using Company.Seif.PL.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +22,11 @@ namespace Company.Seif.PL
                 {
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
                 }
-                );  //Allow DI of CompanyDbContext
+                );
+
+            // builder.Services.AddAutoMapper(typeof(EmployeeProfile));
+            builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
+            //Allow DI of CompanyDbContext
             builder.Services.AddScoped<IScopedServices, ScopedServices>();
             builder.Services.AddScoped<ITransientServices, TransientServices>();
             builder.Services.AddSingleton<ISingletonServices, SingletonServices>();
