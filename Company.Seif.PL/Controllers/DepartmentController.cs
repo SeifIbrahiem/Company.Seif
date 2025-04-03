@@ -22,7 +22,7 @@ namespace Company.Seif.PL.Controllers
         {
 
             var departments = _departmentrepository.GetAll();
-
+            ViewBag.Message= "Hello From ViewBag";
             return View(departments);
         }
         [HttpGet]
@@ -45,6 +45,7 @@ namespace Company.Seif.PL.Controllers
                 var count = _departmentrepository.Add(department);
                 if (count > 0)
                 {
+                    TempData["Message"] = "Department is created !!";
                     return RedirectToAction(nameof(Index));
                 }
 

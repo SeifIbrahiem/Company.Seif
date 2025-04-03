@@ -1,4 +1,12 @@
 ﻿@model CreateEmployeeDto
+@inject IDepartmentRepository _departmentRepo
+ 
+@{
+
+    //var Departments = new SelectList(ViewData["departments"] as IEnumerable<Department> , "Id" , "Name");
+    var Departments = new SelectList(_departmentRepo.GetAll(), "Id", "Name");
+}
+
 <div class="my-3">
     <label asp-for="Name" class="col-form-label"></label>
     <input asp-for="Name" class="form-control" />
@@ -47,3 +55,13 @@
     <input asp-for="CreateAt" class="form-control" />
     <span asp-validation-for="CreateAt" class="text-danger"></span>
 </div>
+<div class="my-3">
+    <label asp-for="DepartmentId" class="col-form-label"></label>
+    <select asp-for="DepartmentId"asp-items="Departments" class="form-control" >
+       <option value="@null">-- Select Department --</option>
+    </select>
+</div>
+
+
+
+
