@@ -97,11 +97,11 @@ namespace Company.Seif.PL.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id,Employee model)
+        public IActionResult Edit([FromRoute] int id, CreateEmployeeDto model, string viewName = "Edit")
         {
             if (ModelState.IsValid)
             {
-                if (id != model.Id) return BadRequest(); //400
+                // if (id != model.Id) return BadRequest(); //400
                 //var employee = new Employee()
                 //{
                 //    Id = id,
@@ -116,13 +116,15 @@ namespace Company.Seif.PL.Controllers
                 //    Phone = model.Phone,
                 //    Salary = model.Salary,
                 //};
-                var count = _employeeRepository.Update(model);
+                var employee = _mapper.Map<Employee>(model);
+                employee.Id = id;
+                var count = _employeeRepository.Update(employee);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
             }
-            return View(model);
+            return View(viewName,model);
 
         }
         [HttpGet]
@@ -132,12 +134,13 @@ namespace Company.Seif.PL.Controllers
             return Detailes(id, "Delete");
         }
         [HttpPost]
-        public IActionResult Delete([FromRoute] int id, Employee model)
+        public IActionResult Delete([FromRoute] int id, CreateEmployeeDto model)
         {
             if (ModelState.IsValid)
             {
-                if (id != model.Id) return BadRequest(); //400
-                var count = _employeeRepository.Delete(model);
+                var employee = _mapper.Map<Employee>(model);
+                employee.Id = id;
+                var count = _employeeRepository.Delete(employee);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
