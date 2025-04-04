@@ -1,3 +1,4 @@
+using Company.Seif.BLL;
 using Company.Seif.BLL.Interfaces;
 using Company.Seif.BLL.Repositories;
 using Company.Seif.DAL.Data.Contexts;
@@ -17,6 +18,7 @@ namespace Company.Seif.PL
             builder.Services.AddControllersWithViews(); //Register Built_in MVC Services
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); //Allow DI of departmentRepository
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
             builder.Services.AddDbContext<CompanyDbContext>(
                 options =>
                 {

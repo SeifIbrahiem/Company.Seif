@@ -18,5 +18,7 @@ namespace Company.Seif.BLL.Interfaces
         //int Update(Department model);
 
         //int Delete(Department model);
+
+        List<Department> GetByName(string name);
     }
 }

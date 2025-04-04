@@ -10,17 +10,21 @@ namespace Company.Seif.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        // private readonly IEmployeeRepository _employeeRepository;
         //private readonly IDepartmentRepository _departmentRepository;
         private readonly IMapper _mapper;
 
         public EmployeeController(
-            IEmployeeRepository employeeRepository , 
+           // IEmployeeRepository employeeRepository , 
           //  IDepartmentRepository departmentRepository,
+           IUnitOfWork unitOfWork,
             IMapper mapper)
         {
-            _employeeRepository = employeeRepository;
-          //  _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
+            // _employeeRepository = employeeRepository;
+            //  _departmentRepository = departmentRepository;
             _mapper = mapper;
         }
         [HttpGet]
@@ -29,11 +33,11 @@ namespace Company.Seif.PL.Controllers
             IEnumerable<Employee> employees;
             if (string.IsNullOrEmpty(SearchInput))
             { 
-             employees = _employeeRepository.GetAll();
+             employees = _unitOfWork.EmployeeRepository.GetAll();
             }
             else
             {
-             employees= _employeeRepository.GetByName(SearchInput);
+             employees= _unitOfWork.EmployeeRepository.GetByName(SearchInput);
             }
             // ViewData["Message"] = "Hello From ViewData";
             return View(employees);
@@ -41,8 +45,8 @@ namespace Company.Seif.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-           // var departments =   _departmentRepository.GetAll();
-           //ViewData["departments"] = departments;
+           var departments = _unitOfWork.DepartmentRepository.GetAll();
+           ViewData["departments"] = departments;
             return View();
         }
         [HttpPost]
@@ -65,7 +69,7 @@ namespace Company.Seif.PL.Controllers
                 //    DepartmentId = model.DepartmentId,
                 //};
                var employee = _mapper.Map<Employee>(model);
-                var count = _employeeRepository.Add(employee);
+                var count = _unitOfWork.EmployeeRepository.Add(employee);
                 if (count > 0)
                 {
                     TempData["Message"] = "Employee is created !!";
@@ -77,23 +81,25 @@ namespace Company.Seif.PL.Controllers
 
         [HttpGet]
 
-        public IActionResult Detailes(int? id, string viewName = "Detailes")
+        public IActionResult Detailes(int? id)
         {
             if (id is null) return BadRequest("Invalid Id"); //400
-            var employee = _employeeRepository.Get(id.Value);
+            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
             if (employee is null) return NotFound(new { statueCode = 404, Message = $"Employee With Id : {id} is not found" });
-            return View(viewName, employee);
+            var dto=_mapper.Map<CreateEmployeeDto>(employee);
+            return View(dto);
         }
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int? id , string viewName="Edit")
         {
             //var departments = _departmentRepository.GetAll();
             //ViewData["departments"] = departments;
             if (id is null) return BadRequest("Invalid Id");
-            var employee = _employeeRepository.Get(id.Value);
+            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
+            var departments = _unitOfWork.DepartmentRepository.GetAll();
             if (employee is null) return NotFound(new { statueCode = 404, Message = $"Employee With Id : {id} is not found" });
             var dto = _mapper.Map<CreateEmployeeDto>(employee);
-            return View(dto);
+            return View(viewName, dto);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -118,7 +124,7 @@ namespace Company.Seif.PL.Controllers
                 //};
                 var employee = _mapper.Map<Employee>(model);
                 employee.Id = id;
-                var count = _employeeRepository.Update(employee);
+                var count = _unitOfWork.EmployeeRepository.Update(employee);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -131,7 +137,7 @@ namespace Company.Seif.PL.Controllers
 
         public IActionResult Delete(int? id)
         {
-            return Detailes(id, "Delete");
+            return Edit (id, "Delete");
         }
         [HttpPost]
         public IActionResult Delete([FromRoute] int id, CreateEmployeeDto model)
@@ -140,7 +146,7 @@ namespace Company.Seif.PL.Controllers
             {
                 var employee = _mapper.Map<Employee>(model);
                 employee.Id = id;
-                var count = _employeeRepository.Delete(employee);
+                var count = _unitOfWork.EmployeeRepository.Delete(employee);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
