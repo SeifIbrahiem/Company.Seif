@@ -24,8 +24,11 @@ namespace Company.Seif.PL.DTOS
             public DateTime HiringDate { get; set; }
             [DisplayName("Data of create")]
             public DateTime CreateAt { get; set; }
+        [DisplayName("Department")]
 
-            public int? DepartmentId { get; set; }
+         public int? DepartmentId { get; set; }
+         public int? Id { get; set; }
+        public string? DepartmentName { get; set; }
         }
     }
 
