@@ -9,7 +9,7 @@ namespace Company.Seif.BLL.Interfaces
 {
     public interface IDepartmentRepository : IGenericRepository<Department>
     {
-        //IEnumerable<Department> GetAll();
+        // IEnumerable<Department> GetAll();
 
         //Department? Get(int id);
 
@@ -19,6 +19,8 @@ namespace Company.Seif.BLL.Interfaces
 
         //int Delete(Department model);
 
-        List<Department> GetByName(string name);
+        // Task<List<Department>> GetByIdAsync(int id);
+
+       // Task<IEnumerable<Department>> GetAllAsync();
     }
 }

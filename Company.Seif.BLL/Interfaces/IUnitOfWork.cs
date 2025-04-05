@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace Company.Seif.BLL.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IAsyncDisposable
     {
         IDepartmentRepository DepartmentRepository { get;}
 
         IEmployeeRepository   EmployeeRepository   { get;}
+
+        Task<int> CompleteAsync();
+
+
     }
 }

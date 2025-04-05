@@ -23,5 +23,15 @@ namespace Company.Seif.BLL
             DepartmentRepository = new DepartmentRepository(_context);
             EmployeeRepository = new EmployeeRepository(_context);
         }
+
+        public async Task<int> CompleteAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+           await _context.DisposeAsync();
+        }
     }
 }
