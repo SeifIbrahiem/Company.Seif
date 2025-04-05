@@ -29,6 +29,11 @@ namespace Company.Seif.PL.DTOS
          public int? DepartmentId { get; set; }
          public int? Id { get; set; }
         public string? DepartmentName { get; set; }
-        }
+
+        public IFormFile? Image { get; set; }
+
+        public string? ImageName { get; set; }
+
+    }
     }
 

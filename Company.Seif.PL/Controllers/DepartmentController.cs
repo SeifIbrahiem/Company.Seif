@@ -20,10 +20,10 @@ namespace Company.Seif.PL.Controllers
             _unitOfWork = unitOfWork;
         }
         [HttpGet] //GET: /Department/Index
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
 
-            var departments = _unitOfWork.DepartmentRepository.GetAll();
+            var departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
             ViewBag.Message= "Hello From ViewBag";
             return View(departments);
         }
@@ -33,7 +33,7 @@ namespace Company.Seif.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(CreateDepartmentDto model)
+        public async Task<IActionResult> Create(CreateDepartmentDto model)
         {
             if (ModelState.IsValid) //server side validation
             {
@@ -44,7 +44,8 @@ namespace Company.Seif.PL.Controllers
                     CreateAt = model.CreateAt,
 
                 };
-                var count = _unitOfWork.DepartmentRepository.Add(department);
+               await _unitOfWork.DepartmentRepository.AddAsync(department);
+                var count = await _unitOfWork.CompleteAsync();
                 if (count > 0)
                 {
                     TempData["Message"] = "Department is created !!";
@@ -58,18 +59,18 @@ namespace Company.Seif.PL.Controllers
 
         [HttpGet]
 
-        public IActionResult Detailes(int? id )
+        public async Task<IActionResult> Detailes(int? id )
         {
             if (id is null) return BadRequest("Invalid Id"); //400
-            var department = _unitOfWork.DepartmentRepository.Get(id.Value);
+            var department = await _unitOfWork.DepartmentRepository.GetAsync(id.Value);
             if (department is null) return NotFound(new { statueCode = 404, Message = $"Department With Id : {id} is not found" });
             return View(department);
         }
         [HttpGet]
-        public IActionResult Edit(int?id)
+        public async Task<IActionResult> Edit(int?id)
         {
             if (id is null) return BadRequest("Invalid Id"); //400
-            var department = _unitOfWork.DepartmentRepository.Get(id.Value);
+            var department = await _unitOfWork.DepartmentRepository.GetAsync(id.Value);
             if(department is null) return NotFound(new { statueCode = 404, Message = $"Department With Id : {id} is not found" });
 
             var dto = new CreateDepartmentDto()
@@ -82,7 +83,7 @@ namespace Company.Seif.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit([FromRoute]int id , CreateDepartmentDto model)
+        public async Task<IActionResult> Edit([FromRoute]int id , CreateDepartmentDto model)
         {
           if (ModelState.IsValid) //server side validation
             {
@@ -93,7 +94,8 @@ namespace Company.Seif.PL.Controllers
                     Code = model.Code,
                     CreateAt = model.CreateAt
                 };
-                var count = _unitOfWork.DepartmentRepository.Update(department);
+                _unitOfWork.DepartmentRepository.Update(department);
+                var count = await _unitOfWork.CompleteAsync();
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -103,10 +105,10 @@ namespace Company.Seif.PL.Controllers
         }
         [HttpGet]
 
-        public IActionResult Delete (int? id)
+        public async Task<IActionResult> Delete (int? id)
         {
             if (id is null) return BadRequest("Invalid Id"); //400
-            var department = _unitOfWork.DepartmentRepository.Get(id.Value);
+            var department = await _unitOfWork.DepartmentRepository.GetAsync(id.Value);
             if (department is null) return NotFound(new { statueCode = 404, Message = $"Department With Id : {id} is not found" });
 
             var dto = new CreateDepartmentDto()
@@ -119,7 +121,7 @@ namespace Company.Seif.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete ([FromRoute] int id, CreateDepartmentDto model)
+        public async Task<IActionResult> Delete ([FromRoute] int id, CreateDepartmentDto model)
         {
             if (ModelState.IsValid) //server side validation
             {
@@ -130,7 +132,8 @@ namespace Company.Seif.PL.Controllers
                     Code = model.Code,
                     CreateAt = model.CreateAt
                 };
-                var count = _unitOfWork.DepartmentRepository.Delete(department);
+                _unitOfWork.DepartmentRepository.Delete(department);
+                var count =await _unitOfWork.CompleteAsync();
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
