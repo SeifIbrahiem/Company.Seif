@@ -2,8 +2,10 @@ using Company.Seif.BLL;
 using Company.Seif.BLL.Interfaces;
 using Company.Seif.BLL.Repositories;
 using Company.Seif.DAL.Data.Contexts;
+using Company.Seif.DAL.Models;
 using Company.Seif.PL.Mapping;
 using Company.Seif.PL.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.Seif.PL
@@ -28,6 +30,17 @@ namespace Company.Seif.PL
 
             // builder.Services.AddAutoMapper(typeof(EmployeeProfile));
             builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
+
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+                            .AddEntityFrameworkStores<CompanyDbContext>();
+            builder.Services.ConfigureApplicationCookie(config =>
+
+            {
+                config.LoginPath = "/Acount/SignIn";
+            }
+            );
+
+
             //Allow DI of CompanyDbContext
             builder.Services.AddScoped<IScopedServices, ScopedServices>();
             builder.Services.AddScoped<ITransientServices, TransientServices>();
@@ -48,6 +61,8 @@ namespace Company.Seif.PL
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
