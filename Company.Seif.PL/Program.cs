@@ -32,7 +32,8 @@ namespace Company.Seif.PL
             builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
 
             builder.Services.AddIdentity<AppUser, IdentityRole>()
-                            .AddEntityFrameworkStores<CompanyDbContext>();
+                            .AddEntityFrameworkStores<CompanyDbContext>()
+                            .AddDefaultTokenProviders();
             builder.Services.ConfigureApplicationCookie(config =>
 
             {
