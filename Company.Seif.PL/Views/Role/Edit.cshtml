@@ -8,8 +8,9 @@
 <br/>
 
 <form asp-action="Edit" enctype="multipart/form-data">
-    <partial name="EmployeePartialView/_CreateEditPartialView" />
+    <partial name="RolePartialView/_CreateEditPartialView" />
     <div class="my-3">
+        <a asp-action="AddOrRemoveUsers" asp-route-roleId="@Model.Id" class="btn btn-success">Add Or Remove User</a>
         <input type="submit" value="Update" class="btn btn-primary" />
         <a asp-action="Index" class="btn btn-light">Back To List</a>
     </div>
